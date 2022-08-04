@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
 // generate로 컨트롤러의 이름을 입력해주고 생성하면 자동으로 입력한 컨트롤러 이름으로 만들어진다.
 // 컨트롤러 안에 있는 movies는 기본 라우터를 나타낸다. ex) http://localhost:3000/movies
