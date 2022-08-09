@@ -8,6 +8,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CreateMovieDTO } from './dto/create-movie.dto';
+import { UpdateMovieDTO } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MoviesService } from './movies.service';
 
@@ -31,24 +33,25 @@ export class MoviesController {
   // Get id의 라우터가 제일 위에 있으면 다른 라우터들은 id로 인식하게 된다.
 
   @Get(':id')
-  getOne(@Param('id') movieId: string): Movie {
+  getOne(@Param('id') movieId: number): Movie {
+    console.log(typeof movieId);
     return this.moviesService.getOne(movieId);
   }
 
   @Post()
-  createMovie(@Body() movieData) {
+  createMovie(@Body() movieData: CreateMovieDTO) {
     return this.moviesService.create(movieData);
   }
 
   @Delete(':id')
-  removeMovie(@Param('id') movieId: string) {
+  removeMovie(@Param('id') movieId: number) {
     return this.moviesService.deleteOne(movieId);
   }
 
   // put은 모든 리소스를 업데이트해준다.
   // patch는 리소스의 일부분만 업데이트해준다.
   @Patch(':id')
-  patchMovie(@Param('id') movieId: string, @Body() updateData) {
+  patchMovie(@Param('id') movieId: number, @Body() updateData: UpdateMovieDTO) {
     return this.moviesService.update(movieId, updateData);
   }
 }
