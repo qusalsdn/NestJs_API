@@ -1,9 +1,11 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesService } from './movies.service';
 
 describe('MoviesService', () => {
   let service: MoviesService;
 
+  // beforeEach 함수는 테스트를 하기 전에 실행된다.
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [MoviesService],
@@ -14,5 +16,36 @@ describe('MoviesService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('getAll', () => {
+    // getAll()이 배열을 리턴하는지 안 하는지 테스트를 하는 것이다.
+    it('should return an array', () => {
+      const result = service.getAll();
+      expect(result).toBeInstanceOf(Array);
+    });
+  });
+
+  describe('getOne', () => {
+    it('should return a movie', () => {
+      // 처음에는 Movie가 없을 수 있으므로 create 함수로 test용 movie를 생성시켜준다.
+      service.create({
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      });
+      const movie = service.getOne(1);
+      expect(movie).toBeDefined();
+      expect(movie.id).toEqual(1);
+    });
+
+    it('should throw 404 error', () => {
+      try {
+        service.getOne(999);
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+        expect(e.message).toEqual('Movie with ID 999 not found.');
+      }
+    });
   });
 });
