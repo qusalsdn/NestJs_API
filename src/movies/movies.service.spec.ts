@@ -14,6 +14,8 @@ describe('MoviesService', () => {
     service = module.get<MoviesService>(MoviesService);
   });
 
+  // afterAll 함수 안에는 데이터베이스를 깨끗하게 정리재수는 함수를 넣을 수 있다.
+
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
@@ -81,6 +83,27 @@ describe('MoviesService', () => {
     it('should return a 404', () => {
       try {
         service.deleteOne(999);
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('update', () => {
+    it('should update a movie', () => {
+      service.create({
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      });
+      service.update(1, { title: 'Updated Test' });
+      const movie = service.getOne(1);
+      expect(movie.title).toEqual('Updated Test');
+    });
+
+    it('should throw a NotFoundException', () => {
+      try {
+        service.update(999, {});
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
       }
