@@ -18,6 +18,21 @@ describe('MoviesService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('create', () => {
+    it('should create a movie', () => {
+      const beforeCreate = service.getAll().length;
+      service.create({
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      });
+      const afterCreate = service.getAll().length;
+      console.log(beforeCreate, afterCreate);
+      // toBeGreaterThan 함수는 afterCreate 값이 beforeCreate 값보다 큰 지 확인하는 함수이다.
+      expect(afterCreate).toBeGreaterThan(beforeCreate);
+    });
+  });
+
   describe('getAll', () => {
     // getAll()이 배열을 리턴하는지 안 하는지 테스트를 하는 것이다.
     it('should return an array', () => {
@@ -45,6 +60,29 @@ describe('MoviesService', () => {
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException);
         expect(e.message).toEqual('Movie with ID 999 not found.');
+      }
+    });
+  });
+
+  describe('deleteOne', () => {
+    it('deletes a movie', () => {
+      service.create({
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      });
+      const beforeDelete = service.getAll().length;
+      service.deleteOne(1);
+      const afterDelete = service.getAll().length;
+      // 삭제 이후의 movie 배열의 길이가 1개 작아지기 때문에 toBeLessThan 함수를 사용한다.
+      expect(afterDelete).toBeLessThan(beforeDelete);
+    });
+
+    it('should return a 404', () => {
+      try {
+        service.deleteOne(999);
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
       }
     });
   });
